@@ -4,7 +4,7 @@ namespace Day07;
 
 public class Hand 
 {
-    private static readonly char[] CardRanks = new char[] { '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A' }; 
+    private static readonly char[] CardRanks = new char[] { 'J', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'Q', 'K', 'A' }; 
 
     public static Hand Parse(string line)
     {
@@ -27,6 +27,8 @@ public class Hand
         Array.Copy(_cards, cards, cards.Length);
         Array.Sort(cards);
 
+        int wildcards = 0;
+
         bool fiveOfAKind = false;
         bool fourOfAKind = false;
         bool threeOfAKind = false;
@@ -39,37 +41,50 @@ public class Hand
         for (i = 0; i < cards.Length; i++)
         {
             var a = cards[i];
-            for (j = i + 1; j < cards.Length; j++)
+            if (a == 0)
             {
-                var b = cards[j];
-                c++;
-
-                if (a != b)
-                {
-                    i = j - 1;
-                    switch (c) 
-                    {
-                        case 5:
-                            fiveOfAKind = true;
-                            break;
-                        case 4:
-                            fourOfAKind = true;
-                            break;
-                        case 3:
-                            threeOfAKind = true;
-                            break;
-                        case 2:
-                            twoPair = onePair;
-                            onePair = true;
-                            break;
-                    }
-
-                    c = 0;
-                    break;
-                }
+                wildcards++;
             }
+            else 
+            {
+                for (j = i + 1; j < cards.Length; j++)
+                {
+                    var b = cards[j];
+                    if (b == 0)
+                    {
+                        wildcards++;
+                    }
+                    else
+                    {
+                        c++;
 
-            i = j - 1;
+                        if (a != b)
+                        {
+                            i = j - 1;
+                            switch (c) 
+                            {
+                                case 5:
+                                    fiveOfAKind = true;
+                                    break;
+                                case 4:
+                                    fourOfAKind = true;
+                                    break;
+                                case 3:
+                                    threeOfAKind = true;
+                                    break;
+                                case 2:
+                                    twoPair = onePair;
+                                    onePair = true;
+                                    break;
+                            }
+
+                            c = 0;
+                            break;
+                        }
+                    }
+                }
+                i = j - 1;
+            }
         }
 
         if (c > 0) {
@@ -90,13 +105,88 @@ public class Hand
             }
         }
 
-        if (fiveOfAKind) return 6;
-        if (fourOfAKind) return 5;
-        if (threeOfAKind && onePair) return 4;
-        if (threeOfAKind) return 3;
-        if (twoPair) return 2;
-        if (onePair) return 1;
-        return 0;
+        if (fiveOfAKind) 
+        {
+            return 6;
+        }
+
+        if (fourOfAKind)
+        {
+            if (wildcards == 1)
+            { 
+                return 6;
+            }
+            else 
+            {
+                return 5;
+            }
+        }
+
+        if (threeOfAKind && onePair) 
+        {
+            return 4;
+        }
+
+        if (threeOfAKind) 
+        {
+            if (wildcards == 2)
+            {
+                return 6;
+            }
+            else if (wildcards == 1)
+            {
+                return 5;
+            }
+            else 
+            {
+                return 3;
+            }
+        }
+
+        if (twoPair)  {
+            if (wildcards == 1)
+            {
+                return 4;
+            }
+            else
+            {
+                return 2;
+            }
+        }
+
+        if (onePair) 
+        {
+            if (wildcards == 3)
+            {
+                return 6;
+            }
+            else if (wildcards == 2)
+            {
+                return 5;
+            }
+            else if (wildcards == 1)
+            {
+                return 3;
+            }
+            else 
+            {
+                return 1;
+            }
+        }
+
+        if (wildcards == 5) {
+            return 6;
+        } else if (wildcards == 4) {
+            return 6;
+        } else if (wildcards == 3) {
+            return 5;
+        } else if (wildcards == 2) {
+            return 3;
+        } else if (wildcards == 1) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     private readonly long _bid;
