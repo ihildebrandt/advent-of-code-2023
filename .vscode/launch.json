@@ -13,6 +13,13 @@
             "request": "launch",
             "projectPath": "${workspaceFolder}\\c#\\Day07\\Day07.csproj",
             "launchConfigurationId": "TargetFramework=;Day07"
+        },
+        {
+            "name": "C#: Day08",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}\\c#\\Day08\\Day08.csproj",
+            "launchConfigurationId": "TargetFramework=;Day08"
         }
     ]
 }
