@@ -15,18 +15,6 @@ public class Node
         return node;
     }
 
-    public static void CalculateAllWinners(char[] directions)
-    {
-        foreach (var kvp in Nodes)
-        {
-            kvp.Value.CalculateWinners(directions);
-        }
-    }
-
-    public static void CalculateAllLoopCounts()
-    {
-    }
-
     public static Node GetNode(string id)
     {
         return Nodes[id];
@@ -45,15 +33,12 @@ public class Node
     private readonly string _right;
     private readonly IList<long> _winners = new List<long>();
 
-    private Node? _lastNodeInChain;
-
     public string Id => _id;
     public Node Left => Nodes[_left];
     public Node Right => Nodes[_right];
 
     public bool IsWinner => _id.EndsWith("Z");
     public IList<long> WinnersInChain => _winners;
-    public Node LastNodeInChain => _lastNodeInChain!;
 
     private Node(string id, string left, string right)
     {
@@ -62,18 +47,18 @@ public class Node
         _right = right;
     }
 
-    public void CalculateWinners(char[] directions)
+    public long GetWinDistance(char[] directions)
     {
+        var distance = 0;
         var node = this;
 
-        if (node.IsWinner) _winners.Add(0);
-        for (var i = 0; i < directions.Length; i++)
+        while (!node.IsWinner) 
         {
-            var direction = directions[i];
+            var direction = directions[distance % directions.Length];
             node = direction == 'R' ? node.Right : node.Left;
-            if (node.IsWinner) _winners.Add(i + 1);
+            distance++;
         }
 
-        _lastNodeInChain = node;
+        return distance;
     }
 }
