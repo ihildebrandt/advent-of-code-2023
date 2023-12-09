@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace Day05;
 
 public class Map
@@ -29,10 +31,13 @@ public class Map
 
     public ResourceType Source => _sourceType;
     public ResourceType Destination => _destinationType;
+    public IList<Range> Ranges => _ranges; 
 
-    private readonly IList<(long SourceOrigin, long DestinationOrigin, long Length)> _ranges = new List<(long, long, long)>();
+    public long MaxRangeDestination => _ranges.Max(r => r.DestinationEnd);
 
-    private Map(ResourceType source, ResourceType destination)
+    private readonly IList<Range> _ranges = new List<Range>();
+
+    public Map(ResourceType source, ResourceType destination)
     {
         _sourceType = source;
         _destinationType = destination;
@@ -40,7 +45,13 @@ public class Map
 
     public void AddRange(long source, long destination, long length)
     {
-        _ranges.Add((source, destination, length));
+        var range = new Range(source, destination, length);
+        AddRange(range);
+    }
+
+    public void AddRange(Range range)
+    {
+        _ranges.Add(range);
     }
 
     public long FindRangeMappedValue(long input)
@@ -57,5 +68,15 @@ public class Map
         }
 
         return input;
+    }
+
+    public override string ToString()
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine($"{Source} -> {Destination}:");
+        foreach (var line in _ranges) {
+            sb.AppendLine($"    {line}");
+        }
+        return sb.ToString();
     }
 }

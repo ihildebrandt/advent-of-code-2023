@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using AdventOfCode;
 using Day08;
 
 string? line = null;

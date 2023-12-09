@@ -1,4 +1,5 @@
-﻿using Day05;
+﻿using System.Diagnostics;
+using Day05;
 
 var enumerable = Reader.ReadEnumerable(Console.In);
 var enumerator = enumerable.GetEnumerator();
@@ -18,13 +19,20 @@ while(enumerator.MoveNext())
     maps.Add(Map.Parse(enumerator));
 }
 
-var locations = new List<long>();
+foreach (var map in maps)
+{
+    Console.WriteLine(map);
+}
 
+var reduced = maps.Reduce();
+Console.WriteLine(reduced);
+
+
+/*
+// The brute force approach worked, but it took forever to run
+var locations = new List<long>();
 for (var i = 0; i < seeds.Length; i += 2)
 {
-    /*
-     * The brute force approach worked, but it took forever to run
-     */
     for (var seed = seeds[i]; seed < seeds[i] + seeds[i+1]; seed++)
     {
         Map? map = null;
@@ -46,3 +54,4 @@ for (var i = 0; i < seeds.Length; i += 2)
 }
 
 Console.WriteLine(locations.Min());
+*/
